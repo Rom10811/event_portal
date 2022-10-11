@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_portal_report" model="ir.actions.report">
+        <field name="name">Event Portal Report</field>
+        <field name="model">event.event</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">event_portal.report_event_attendees</field>
+        <field name="report_file">event_portal.report_event_attendees</field>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_event_attendees">
+        <t t-call="web.external_layout">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="event_portal.report_event_document"/>
+            </t>
+        </t>
+    </template>
+
+
+    <template id="report_event_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <center>
+                    <h3>
+                        <b>
+                            <t t-out="o.name"/>
+                        </b>
+                    </h3>
+                </center>
+                <div class="event_infos">
+                    <div>
+                        <span>Start at:</span>
+                        <span t-field="o.date_begin"/>
+                    </div>
+                    <div>
+                        <span>End at:</span>
+                        <span t-field="o.date_end"/>
+                    </div>
+                    <div>
+                        <span>Location:</span>
+                        <span t-field="o.address_id.street"/>, <span t-field="o.address_id.city"/>, <span t-field="o.address_id.country_id.name"/>
+                    </div>
+                    <div>
+                        <span>Attendees:</span>
+                        <span t-field="o.seats_expected"/>
+                    </div>
+                </div>
+                <hr></hr>
+                <t t-if="o.seats_expected > 0">
+                    <table class="table table-sm o_main_table" name="attendee_line_table">
+                        <thead>
+                            <tr>
+                                <th name="th_name" class="text-left">
+                                    <span>Name</span>
+                                </th>
+                                <th name="th_ticket_type" class="text-left">
+                                    <span>Ticket Type</span>
+                                </th>
+                                <th name="th_phone" class="text-left">
+                                    <span>Phone Number</span>
+                                </th>
+                                <th name="th_inscription_date" class="text-left">
+                                    <span>Inscription Date</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="attendees_tbody">
+                            <t t-foreach="o.registration_ids" t-as="attendee">
+                                <tr>
+                                    <td name="event_attendee_line_name">
+                                        <span t-field="attendee.name" t-options="{'widget': 'text'}"/>
+                                    </td>
+                                    <td name="event_attendee_line_ticket_type">
+                                        <span t-field="attendee.event_ticket_id.display_name"
+                                              t-options="{'widget': 'text'}"/>
+                                    </td>
+                                    <td name="event_attendee_line_phone">
+                                        <span t-field="attendee.phone"
+                                              t-options="{'widget': 'text'}"/>
+                                    </td>
+                                    <td name="event_attendee_line_inscription_date">
+                                        <span t-field="attendee.date_open"
+                                              t-field-options='{"format": "d MMMM y"}'
+                                        />
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
