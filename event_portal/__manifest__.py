@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Events Portal Test',
-    'version': '1.1',
-    'category': 'Test',
+    'name': 'Events Portal',
+    'version': '1',
+    'category': 'Custom',
     'summary': 'List of all events',
     'description': "List of all events",
     'depends': ['event', 'portal'],
